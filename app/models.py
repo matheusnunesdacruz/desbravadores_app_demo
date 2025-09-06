@@ -8,8 +8,8 @@ from .database import Base
 desbravador_especialidade = Table(
     "desbravador_especialidade",
     Base.metadata,
-    mapped_column("desbravador_id", ForeignKey("desbravadores.id"), primary_key=True),
-    mapped_column("especialidade_id", ForeignKey("especialidades.id"), primary_key=True),
+    Column("desbravador_id", ForeignKey("desbravadores.id"), primary_key=True),
+    Column("especialidade_id", ForeignKey("especialidades.id"), primary_key=True),
 )
 
 class Unidade(Base):
