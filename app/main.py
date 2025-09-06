@@ -7,7 +7,7 @@ from .database import Base, engine
 from .routers import core
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Clube de Desbravadores", version="1.0.0")
+    app = FastAPI(title="Clube de Desbravadores Monte das Oliveiras", version="1.0.0")
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
