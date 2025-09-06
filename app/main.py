@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from .database import Base, engine
 from .routers import core
-from app import auth
+import app.auth as auth
 
 def create_app() -> FastAPI:
     app = FastAPI(title="Clube de Desbravadores Monte das Oliveiras", version="1.0.0")
