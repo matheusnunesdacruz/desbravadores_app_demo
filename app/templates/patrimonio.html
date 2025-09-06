@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Patrimônio</h3>
+<form method="post" class="row g-2 mb-3">
+  <div class="col-md-3"><input class="form-control" name="nome" placeholder="Nome" required></div>
+  <div class="col-md-3"><input class="form-control" name="descricao" placeholder="Descrição"></div>
+  <div class="col-md-2"><input type="date" class="form-control" name="data_aquisicao"></div>
+  <div class="col-md-2"><input type="number" step="0.01" class="form-control" name="valor" placeholder="Valor"></div>
+  <div class="col-md-2"><input class="form-control" name="status" placeholder="Status" value="Em uso"></div>
+  <div class="col-md-2"><button class="btn btn-primary w-100">Adicionar</button></div>
+</form>
+<table class="table table-striped table-hover">
+  <thead><tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Data</th><th>Valor</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    {% for p in data %}
+    <tr>
+      <td>{{ p.id }}</td><td>{{ p.nome }}</td><td>{{ p.descricao }}</td><td>{{ p.data_aquisicao or '-' }}</td>
+      <td>R$ {{ '%.2f'|format(p.valor) }}</td><td>{{ p.status }}</td>
+      <td>
+        <form method="post" action="/patrimonio/{{p.id}}/delete" onsubmit="return confirm('Excluir?')">
+          <button class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

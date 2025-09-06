@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Autorização de Saída</h3>
+{% if d %}
+<div class="border p-4">
+  <p>Eu, <strong>{{ d.responsavel or '________________' }}</strong>, responsável pelo(a) desbravador(a) <strong>{{ d.nome }}</strong>, documento <strong>{{ d.documento or '________________' }}</strong>, autorizo sua saída para atividades do Clube de Desbravadores conforme programação vigente.</p>
+  <p>Local e Data: __________________________________________</p>
+  <p>Assinatura do Responsável: ______________________________</p>
+</div>
+{% else %}
+<p class="text-danger">Desbravador não encontrado.</p>
+{% endif %}
+{% endblock %}

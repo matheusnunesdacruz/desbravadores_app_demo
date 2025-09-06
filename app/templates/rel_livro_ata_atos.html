@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Relatório - Livro de Atas e Atos</h3>
+<h5 class="mt-3">Atas</h5>
+<ol>
+  {% for a in atas %}<li><strong>{{ a.data }} - {{ a.titulo }}</strong><br>{{ a.conteudo }}</li>{% endfor %}
+</ol>
+<h5 class="mt-4">Atos</h5>
+<ol>
+  {% for a in atos %}<li><strong>{{ a.data }} - {{ a.titulo }}</strong><br>{{ a.conteudo }}</li>{% endfor %}
+</ol>
+{% endblock %}

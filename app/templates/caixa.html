@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Caixa (Saldo: R$ {{ '%.2f'|format(saldo) }})</h3>
+<form method="post" class="row g-2 mb-3">
+  <div class="col-md-2"><input type="date" class="form-control" name="data" required></div>
+  <div class="col-md-2">
+    <select class="form-select" name="tipo">
+      <option value="ENTRADA">Entrada</option>
+      <option value="SAIDA">Saída</option>
+    </select>
+  </div>
+  <div class="col-md-2"><input class="form-control" name="categoria" placeholder="Categoria"></div>
+  <div class="col-md-4"><input class="form-control" name="descricao" placeholder="Descrição"></div>
+  <div class="col-md-2"><input type="number" step="0.01" class="form-control" name="valor" placeholder="Valor" required></div>
+  <div class="col-md-2"><button class="btn btn-primary w-100">Adicionar</button></div>
+</form>
+<table class="table table-striped table-hover">
+  <thead><tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th></th></tr></thead>
+  <tbody>
+    {% for l in data %}
+    <tr>
+      <td>{{ l.data }}</td>
+      <td><span class="badge {{ 'bg-success' if l.tipo=='ENTRADA' else 'bg-danger' }}">{{ l.tipo }}</span></td>
+      <td>{{ l.categoria }}</td>
+      <td>{{ l.descricao }}</td>
+      <td>R$ {{ '%.2f'|format(l.valor) }}</td>
+      <td>
+        <form method="post" action="/caixa/{{l.id}}/delete" onsubmit="return confirm('Excluir?')">
+          <button class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

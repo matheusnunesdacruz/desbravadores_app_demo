@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Relatório - Unidades, Classes, Especialidades e Desbravadores</h3>
+<div class="row g-3">
+  <div class="col-md-3">
+    <h6>Unidades</h6>
+    <ul>{% for u in unidades %}<li>{{ u.nome }}</li>{% endfor %}</ul>
+  </div>
+  <div class="col-md-3">
+    <h6>Classes</h6>
+    <ul>{% for c in classes %}<li>{{ c.nome }} (Nível {{ c.nivel }})</li>{% endfor %}</ul>
+  </div>
+  <div class="col-md-3">
+    <h6>Especialidades</h6>
+    <ul>{% for e in especialidades %}<li>{{ e.nome }} - {{ e.area }}</li>{% endfor %}</ul>
+  </div>
+  <div class="col-md-3">
+    <h6>Desbravadores</h6>
+    <ul>{% for d in des %}<li>{{ d.nome }}{% if d.unidade %} - {{ d.unidade.nome }}{% endif %}{% if d.classe %} ({{ d.classe.nome }}){% endif %}</li>{% endfor %}</ul>
+  </div>
+</div>
+{% endblock %}

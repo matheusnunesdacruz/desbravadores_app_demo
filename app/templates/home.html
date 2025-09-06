@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Desbravadores</h5>
+        <p class="display-6">{{ total_desbravadores }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Saldo em Caixa</h5>
+        <p class="display-6">R$ {{ '%.2f'|format(saldo) }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Mensalidades em Atraso</h5>
+        <p class="display-6">{{ em_atraso }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

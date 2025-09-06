@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Atas</h3>
+<form method="post" class="row g-2 mb-3">
+  <div class="col-md-2"><input type="date" class="form-control" name="data" required></div>
+  <div class="col-md-4"><input class="form-control" name="titulo" placeholder="Título" required></div>
+  <div class="col-md-4"><input class="form-control" name="conteudo" placeholder="Conteúdo (resumo ou link)" required></div>
+  <div class="col-md-2"><button class="btn btn-primary w-100">Adicionar</button></div>
+</form>
+<table class="table table-striped table-hover">
+  <thead><tr><th>Data</th><th>Título</th><th>Conteúdo</th><th></th></tr></thead>
+  <tbody>
+    {% for a in data %}
+    <tr>
+      <td>{{ a.data }}</td><td>{{ a.titulo }}</td><td>{{ a.conteudo[:60] }}{% if a.conteudo|length > 60 %}...{% endif %}</td>
+      <td>
+        <form method="post" action="/atas/{{a.id}}/delete" onsubmit="return confirm('Excluir?')">
+          <button class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Desbravadores</h3>
+<form method="post" class="row g-2 mb-3">
+  <div class="col-md-4"><input class="form-control" name="nome" placeholder="Nome" required></div>
+  <div class="col-md-2"><input type="date" class="form-control" name="data_nascimento" placeholder="Data Nascimento"></div>
+  <div class="col-md-2">
+    <select class="form-select" name="unidade_id">
+      <option value="">Unidade...</option>
+      {% for u in unidades %}<option value="{{u.id}}">{{u.nome}}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <select class="form-select" name="classe_id">
+      <option value="">Classe...</option>
+      {% for c in classes %}<option value="{{c.id}}">{{c.nome}}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2"><input class="form-control" name="documento" placeholder="Documento"></div>
+  <div class="col-md-3"><input class="form-control" name="responsavel" placeholder="Responsável"></div>
+  <div class="col-md-3"><input class="form-control" name="telefone_responsavel" placeholder="Telefone Resp."></div>
+  <div class="col-md-2"><button class="btn btn-primary w-100">Adicionar</button></div>
+</form>
+<table class="table table-striped table-hover">
+  <thead><tr><th>ID</th><th>Nome</th><th>Unidade</th><th>Classe</th><th>Resp.</th><th>Fone</th><th></th></tr></thead>
+  <tbody>
+    {% for d in data %}
+    <tr>
+      <td>{{ d.id }}</td>
+      <td>{{ d.nome }}</td>
+      <td>{{ d.unidade.nome if d.unidade else '-' }}</td>
+      <td>{{ d.classe.nome if d.classe else '-' }}</td>
+      <td>{{ d.responsavel }}</td>
+      <td>{{ d.telefone_responsavel }}</td>
+      <td>
+        <form method="post" action="/desbravadores/{{d.id}}/delete" onsubmit="return confirm('Excluir?')">
+          <button class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

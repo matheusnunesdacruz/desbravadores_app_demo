@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Relatório - Fluxo de Caixa</h3>
+<ul class="list-group mb-3">
+  <li class="list-group-item d-flex justify-content-between"><span>Total Entradas</span><strong>R$ {{ '%.2f'|format(entradas) }}</strong></li>
+  <li class="list-group-item d-flex justify-content-between"><span>Total Saídas</span><strong>R$ {{ '%.2f'|format(saidas) }}</strong></li>
+  <li class="list-group-item d-flex justify-content-between"><span>Saldo</span><strong>R$ {{ '%.2f'|format(saldo) }}</strong></li>
+</ul>
+<p class="text-muted">Dica: use o menu "Caixa" para lançar entradas e saídas.</p>
+{% endblock %}

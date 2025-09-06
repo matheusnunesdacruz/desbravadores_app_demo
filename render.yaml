@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: clube-desbravadores
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -k uvicorn.workers.UvicornWorker app.main:app
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+    autoDeploy: true
+    plan: free
