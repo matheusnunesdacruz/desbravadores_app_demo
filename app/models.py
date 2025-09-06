@@ -98,13 +98,11 @@ class Ato(Base):
 
 class Role(str, enum.Enum):
     ADMIN = "admin"
-    DESBRAVADOR = "desbravador"
+    USER = "user"
 
 class User(Base):
     __tablename__ = "users"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
     username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    role: Mapped[Role] = mapped_column(Enum(Role), default=Role.DESBRAVADOR)
-
+    role: Mapped[Role] = mapped_column(Enum(Role), default=Role.USER)
