@@ -29,6 +29,6 @@
 
 <!-- Imagem centralizada abaixo dos cards -->
 <div class="text-center mt-5">
-  <img src="{{ url_for('static', filename='images/brasao.png') }}" class="img-fluid" style="max-width: 400px;" alt="Brasão">
+  <img src="{{ request.url_for('static', path='images/brasao.png') }}" class="img-fluid" style="max-width: 400px;" alt="Brasão">
 </div>
 {% endblock %}
