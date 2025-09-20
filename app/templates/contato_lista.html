@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Mensagens de Contato{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h4>Mensagens recebidas</h4>
+
+    {% if visitantes %}
+      <ul class="list-group">
+        {% for v in visitantes %}
+          <li class="list-group-item">
+            <strong>{{ v.nome }}</strong> — {{ v.email }} <br>
+            <small class="text-muted">{{ v.criado_em }}</small>
+            {% set msgs_for_email = [] %}
+            {% for m in messages %}
+              {% if m.email == v.email %}
+                {% set _ = msgs_for_email.append(m) %}
+              {% endif %}
+            {% endfor %}
+            {% if msgs_for_email %}
+              <div class="mt-2">
+                <strong>Mensagens:</strong>
+                <ul>
+                  {% for mm in msgs_for_email %}
+                    <li><em>{{ mm.mensagem }}</em> <small class="text-muted">({{ mm.criado_em }})</small></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-muted">Nenhuma mensagem recebida.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
