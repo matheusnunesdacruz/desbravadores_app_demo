@@ -1,49 +1,19 @@
-# app/routers/site.py
-import os
 from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 
+from app.main import templates
 from ..database import get_db
-from ..models import Visitante, User
+from ..models import User
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# Helper: lista imagens em app/static/images (jpg/png/gif)
-def _listar_imagens():
-    imagens = []
-    base = os.path.join("app", "static", "images")
-    if os.path.isdir(base):
-        for fname in sorted(os.listdir(base)):
-            if fname.lower().endswith((".jpg", ".jpeg", ".png", ".gif", ".webp")):
-                imagens.append(f"/static/images/{fname}")
-    return imagens
-
-@router.get("/fotos", response_class=HTMLResponse)
-def fotos(request: Request):
-    imagens = _listar_imagens()
-    return request.app.state.templates.TemplateResponse("fotos.html", {"request": request, "imagens": imagens})
-
-@router.get("/contato", response_class=HTMLResponse)
-def contato_get(request: Request, db: Session = Depends(get_db)):
-    visitantes = db.query(Visitante).order_by(Visitante.id.desc()).all()
-    return request.app.state.templates.TemplateResponse("contato.html", {"request": request, "visitantes": visitantes})
-
-@router.post("/contato")
-def contato_post(request: Request, nome: str = Form(...), email: str = Form(...), db: Session = Depends(get_db)):
-    novo = Visitante(nome=nome.strip(), email=email.strip())
-    db.add(novo)
-    db.commit()
-    # redirect com 303 para evitar reenvio de formulário ao atualizar
-    return RedirectResponse(url="/contato", status_code=303)
-
-# Registro de usuário simples (persistência no mesmo model User já existente)
 @router.get("/register", response_class=HTMLResponse)
 def register_get(request: Request):
     msg = request.query_params.get("msg")
-    return request.app.state.templates.TemplateResponse("register.html", {"request": request, "msg": msg})
+    return templates.TemplateResponse("register.html", {"request": request, "msg": msg})
 
 @router.post("/register")
 def register_post(request: Request, username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
@@ -58,3 +28,16 @@ def register_post(request: Request, username: str = Form(...), password: str = F
     db.add(novo)
     db.commit()
     return RedirectResponse(url="/register?msg=Registrado+com+sucesso", status_code=303)
+
+@router.get("/login", response_class=HTMLResponse)
+def login_get(request: Request):
+    msg = request.query_params.get("msg")
+    return templates.TemplateResponse("login.html", {"request": request, "msg": msg})
+
+@router.post("/login")
+def login_post(username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.username == username).first()
+    if not user or not pwd_context.verify(password, user.hashed_password):
+        return RedirectResponse(url="/login?msg=Credenciais+inválidas", status_code=303)
+    # NOTA: não implementei sessão/cookie aqui (simplificação).
+    return RedirectResponse(url="/?msg=Login+ok", status_code=303)
