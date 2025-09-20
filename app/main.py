@@ -1,50 +1,43 @@
+import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
-from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent
+from .database import Base, engine
+from .routers import core
+from app import auth  # importa o módulo auth
 
-app = FastAPI()
+def create_app() -> FastAPI:
+    app = FastAPI(
+        title="Clube de Desbravadores Monte das Oliveiras",
+        version="1.0.0"
+    )
 
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+    # Middleware CORS
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
-templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+    # Criação das tabelas no banco
+    Base.metadata.create_all(bind=engine)
 
-# --- Jinja2 helpers: add `date`, `format` filters and `now()` global ---
-from datetime import datetime as _datetime
+    # Monta pasta de arquivos estáticos
+    app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-def _date_filter(value, fmt="%Y"):
-    """Formats datetime-like values. Accepts:
-       - a datetime/date object (uses .strftime(fmt))
-       - the literal string 'now' (returns current datetime formatted)
-       - otherwise returns str(value)
-    """
-    try:
-        if isinstance(value, str) and value.lower() == "now":
-            return _datetime.now().strftime(fmt)
-        return value.strftime(fmt)
-    except Exception:
-        return str(value)
+    # Templates (HTML)
+    templates = Jinja2Templates(directory="app/templates")
+    app.state.templates = templates
 
-def _format_filter(value, fmt="{}"):
-    """Aplica Python str.format no valor.
-       Ex.: {{ 1234.5 | format("R$ {:.2f}") }} -> 'R$ 1234.50'
-    """
-    try:
-        return fmt.format(value)
-    except Exception:
-        return str(value)
+    # Inclui os routers
+    app.include_router(core.router)
+    app.include_router(auth.router, prefix="/auth", tags=["auth"])
 
-# registrar filtros
-templates.env.filters['date'] = _date_filter
-templates.env.filters['format'] = _format_filter
+    return app
 
-# helper para obter data/hora atual em templates
-templates.env.globals['now'] = lambda: _datetime.now()
-# ----------------------------------------------------------------------
-
-# IMPORTS DE ROTAS
-from app.routers import core
-
-app.include_router(core.router)
+# Cria a aplicação
+app = create_app()
