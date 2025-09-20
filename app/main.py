@@ -1,12 +1,13 @@
+# app/main.py
 import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 
 from .database import Base, engine
 from .routers import core
-from app import auth  # importa o módulo auth
+from .routers import site
+from app import auth  # seu módulo auth já existente
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -14,30 +15,22 @@ def create_app() -> FastAPI:
         version="1.0.0"
     )
 
-    # Middleware CORS
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
-    # Criação das tabelas no banco
-    Base.metadata.create_all(bind=engine)
-
-    # Monta pasta de arquivos estáticos
+    # monta arquivos estáticos
     app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-    # Templates (HTML)
+    # Templates (Jinja2)
     templates = Jinja2Templates(directory="app/templates")
     app.state.templates = templates
 
-    # Inclui os routers
+    # cria tabelas (apenas para dev/protótipo)
+    Base.metadata.create_all(bind=engine)
+
+    # inclui routers
     app.include_router(core.router)
     app.include_router(auth.router, prefix="/auth", tags=["auth"])
+    app.include_router(site.router)  # novo router para fotos/contato/registro
 
     return app
 
-# Cria a aplicação
+# instancia a app
 app = create_app()
