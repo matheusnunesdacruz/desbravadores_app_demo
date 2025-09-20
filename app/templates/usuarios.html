@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Usuários{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-body">
+    <h4>Usuários</h4>
+    <a class="btn btn-sm btn-primary mb-3" href="/register">Registrar novo usuário</a>
+
+    {% if usuarios %}
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr><th>ID</th><th>Usuário</th><th>Função</th><th>Ações</th></tr>
+        </thead>
+        <tbody>
+        {% for u in usuarios %}
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.username }}</td>
+            <td>{{ u.role.name if u.role else '' }}</td>
+            <td>
+              <form method="post" action="/usuarios/{{ u.id }}/delete" style="display:inline">
+                <button class="btn btn-sm btn-danger" onclick="return confirm('Remover usuário?')">Remover</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <p class="text-muted">Nenhum usuário encontrado.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
