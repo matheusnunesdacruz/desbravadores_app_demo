@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import date
 import enum
 from .database import Base
+from sqlalchemy import DateTime
+from datetime import datetime
 
 # Tabela de associação Desbravador<->Especialidade (N:N)
 desbravador_especialidade = Table(
@@ -106,3 +108,11 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
     role: Mapped[Role] = mapped_column(Enum(Role), default=Role.USER)
+
+class Visitante(Base):
+    __tablename__ = "visitantes"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    nome: Mapped[str] = mapped_column(String(200), nullable=False)
+    email: Mapped[str] = mapped_column(String(200), nullable=False)
+    criado_em: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
