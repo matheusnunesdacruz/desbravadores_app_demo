@@ -156,3 +156,26 @@ h3 {
     font-size: 0.95rem;
   }
 }
+
+/* ===== Novas regras: sidebar, cards e responsividade ===== */
+
+.sidebar .nav-link {
+  color: #0b63a0;
+  padding: 6px 0;
+}
+.sidebar .nav-link:hover {
+  text-decoration: underline;
+}
+
+.carousel-item img {
+  height: 260px;
+  object-fit: cover;
+}
+
+@media (max-width: 767px) {
+  .sidebar { order: 2; }
+  main { order: 1; }
+}
+
+/* pequenos ajustes visuais */
+.card img { max-height: 220px; object-fit: cover; }
