@@ -11,7 +11,7 @@ app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="stat
 
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
-# --- Jinja2 helpers: add a `date` filter and `now()` global for templates ---
+# --- Jinja2 helpers: add `date`, `format` filters and `now()` global ---
 from datetime import datetime as _datetime
 
 def _date_filter(value, fmt="%Y"):
@@ -27,12 +27,22 @@ def _date_filter(value, fmt="%Y"):
     except Exception:
         return str(value)
 
-# register filter
-templates.env.filters['date'] = _date_filter
+def _format_filter(value, fmt="{}"):
+    """Aplica Python str.format no valor.
+       Ex.: {{ 1234.5 | format("R$ {:.2f}") }} -> 'R$ 1234.50'
+    """
+    try:
+        return fmt.format(value)
+    except Exception:
+        return str(value)
 
-# helper to get current datetime when rendering: use `{{ now() | date("%Y") }}`
+# registrar filtros
+templates.env.filters['date'] = _date_filter
+templates.env.filters['format'] = _format_filter
+
+# helper para obter data/hora atual em templates
 templates.env.globals['now'] = lambda: _datetime.now()
-# ---------------------------------------------------------------
+# ----------------------------------------------------------------------
 
 # IMPORTS DE ROTAS
 from app.routers import core
