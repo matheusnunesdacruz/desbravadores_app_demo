@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Registrar Usuário{% endblock %}
+{% block content %}
+  <h2>Registrar</h2>
+
+  <form method="post" action="/register">
+    <div class="mb-2">
+      <input class="form-control" type="text" name="username" placeholder="Usuário" required>
+    </div>
+    <div class="mb-2">
+      <input class="form-control" type="password" name="password" placeholder="Senha" required>
+    </div>
+    <button class="btn btn-success" type="submit">Registrar</button>
+  </form>
+
+  {% if msg %}
+    <div class="alert alert-info">{{ msg }}</div>
+  {% endif %}
+{% endblock %}
