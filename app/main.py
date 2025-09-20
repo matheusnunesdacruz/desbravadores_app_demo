@@ -4,21 +4,21 @@ from fastapi.responses import FileResponse
 from fastapi.templating import Jinja2Templates
 import os
 
+# Cria o app FastAPI
 app = FastAPI()
 
-# Configuração de templates
+# Configuração global dos templates
 templates = Jinja2Templates(directory="app/templates")
-app.state.templates = templates
 
-# Montar static
+# Arquivos estáticos
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-# Alias para corrigir /static/style.css
+# Alias para corrigir /static/style.css -> /static/styles.css
 @app.get("/static/style.css")
 async def style_alias():
     return FileResponse(os.path.join("app", "static", "styles.css"))
 
-# Importa routers
+# Importa e registra routers
 from app.routers import core, fotos, contato, usuarios
 app.include_router(core.router)
 app.include_router(fotos.router)
