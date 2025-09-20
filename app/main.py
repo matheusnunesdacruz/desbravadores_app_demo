@@ -1,36 +1,36 @@
-# app/main.py
-import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from .database import Base, engine
-from .routers import core
-from .routers import site
-from app import auth  # seu módulo auth já existente
+from app.routers import core, site
 
-def create_app() -> FastAPI:
-    app = FastAPI(
-        title="Clube de Desbravadores Monte das Oliveiras",
-        version="1.0.0"
-    )
+app = FastAPI()
 
-    # monta arquivos estáticos
-    app.mount("/static", StaticFiles(directory="app/static"), name="static")
+# Configurar arquivos estáticos
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
-    # Templates (Jinja2)
-    templates = Jinja2Templates(directory="app/templates")
-    app.state.templates = templates
+# Configurar templates
+templates = Jinja2Templates(directory="app/templates")
 
-    # cria tabelas (apenas para dev/protótipo)
-    Base.metadata.create_all(bind=engine)
+# Incluir rotas existentes
+app.include_router(core.router)
+app.include_router(site.router)
 
-    # inclui routers
-    app.include_router(core.router)
-    app.include_router(auth.router, prefix="/auth", tags=["auth"])
-    app.include_router(site.router)  # novo router para fotos/contato/registro
+# Rotas principais do site
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
 
-    return app
+@app.get("/contato", response_class=HTMLResponse)
+async def contato(request: Request):
+    return templates.TemplateResponse("contato.html", {"request": request})
 
-# instancia a app
-app = create_app()
+@app.get("/fotos", response_class=HTMLResponse)
+async def fotos(request: Request):
+    return templates.TemplateResponse("fotos.html", {"request": request})
+
+@app.get("/usuarios", response_class=HTMLResponse)
+async def usuarios(request: Request):
+    # ⚠️ Ajustar para buscar usuários no banco se já tiver model
+    return templates.TemplateResponse("desbravadores.html", {"request": request})
