@@ -179,3 +179,27 @@ h3 {
 
 /* pequenos ajustes visuais */
 .card img { max-height: 220px; object-fit: cover; }
+
+/* ADICIONADO: estilos para o novo layout e banner animado */
+.bg-amarelo-escuro { background-color: #b39a00 !important; color: #fff !important; }
+header img { border-radius: 6px; }
+.sticky-top { position: sticky; top: 12px; }
+
+.carousel-item img {
+  height: 320px;
+  object-fit: cover;
+}
+
+/* animação simples para títulos */
+@keyframes floaty {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+.carousel-caption h5 { animation: floaty 6s ease-in-out infinite; }
+
+/* responsivo */
+@media (max-width: 767px) {
+  .carousel-item img { height: 180px; }
+}
+
