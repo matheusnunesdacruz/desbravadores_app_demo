@@ -30,40 +30,27 @@
           <div class="card p-2 sticky-top" style="top:20px">
             <h6 class="mb-2">Navegação</h6>
             <ul class="nav flex-column">
-              <li class="nav-item"><a class="nav-link" href="/">Painel</a></li>
-              <li class="nav-item"><a class="nav-link" href="/boas-vindas">Boas-vindas</a></li>
-              <li class="nav-item"><a class="nav-link" href="/fotos">Fotos</a></li>
-              <li class="nav-item"><a class="nav-link" href="/contato">Livro de Visitas</a></li>
-              <hr>
-              <li class="nav-item"><a class="nav-link" href="/unidades">Unidades</a></li>
-              <li class="nav-item"><a class="nav-link" href="/especialidades">Especialidades</a></li>
-              <li class="nav-item"><a class="nav-link" href="/classes">Classes</a></li>
-              <li class="nav-item"><a class="nav-link" href="/desbravadores">Desbravadores</a></li>
-              <li class="nav-item"><a class="nav-link" href="/mensalidades">Mensalidades</a></li>
-              <li class="nav-item"><a class="nav-link" href="/caixa">Caixa</a></li>
-              <li class="nav-item"><a class="nav-link" href="/patrimonio">Patrimônio</a></li>
-              <li class="nav-item"><a class="nav-link" href="/atas">Livro de Atas</a></li>
-              <li class="nav-item"><a class="nav-link" href="/atos">Livro de Atos</a></li>
-              <hr>
-              <li class="nav-item"><a class="nav-link" href="/relatorios/mensalidade">Relatório de Mensalidade</a></li>
-              <li class="nav-item"><a class="nav-link" href="/relatorios/fluxo-caixa">Relatório de Fluxo de Caixa</a></li>
-              <li class="nav-item"><a class="nav-link" href="/relatorios/patrimonio">Relatório de Patrimônio</a></li>
-              <li class="nav-item"><a class="nav-link" href="/relatorios/livro-ata-atos">Relatório de Livro de Atas e Atos</a></li>
-              
-              <!-- Formulário para Relatório de Autorização de Saída -->
-              <li class="nav-item mt-2">
-                <form method="get" action="/relatorios/autorizacao-saida" class="d-flex">
-                  <select name="desbravador_id" class="form-select form-select-sm me-2" required>
-                    <option value="" disabled selected>Escolha um desbravador</option>
-                    {% for des in desbravadores %}
-                      <option value="{{ des.id }}">{{ des.nome }}</option>
-                    {% endfor %}
-                  </select>
-                  <button type="submit" class="btn btn-sm btn-outline-primary">Gerar</button>
-                </form>
-              </li>
-
-              <li class="nav-item"><a class="nav-link" href="/relatorios/unidades-classes-especialidades-desbravadores">Relatório Geral</a></li>
+            <li class="nav-item"><a class="nav-link" href="/">Painel</a></li>
+            <li class="nav-item"><a class="nav-link" href="/boas-vindas">Boas-vindas</a></li>
+            <li class="nav-item"><a class="nav-link" href="/fotos">Fotos</a></li>
+            <li class="nav-item"><a class="nav-link" href="/contato">Livro de Visitas</a></li>
+            <hr>
+            <li class="nav-item"><a class="nav-link" href="/unidades">Unidades</a></li>
+            <li class="nav-item"><a class="nav-link" href="/especialidades">Especialidades</a></li>
+            <li class="nav-item"><a class="nav-link" href="/classes">Classes</a></li>
+            <li class="nav-item"><a class="nav-link" href="/desbravadores">Desbravadores</a></li>
+            <li class="nav-item"><a class="nav-link" href="/mensalidades">Mensalidades</a></li>
+            <li class="nav-item"><a class="nav-link" href="/caixa">Caixa</a></li>
+            <li class="nav-item"><a class="nav-link" href="/patrimonio">Patrimônio</a></li>
+            <li class="nav-item"><a class="nav-link" href="/atas">Livro de Atas</a></li>
+            <li class="nav-item"><a class="nav-link" href="/atos">Livro de Atos</a></li>
+            <hr>
+            <li class="nav-item"><a class="nav-link" href="/relatorios/mensalidade">Relatório de Mensalidade</a></li>
+            <li class="nav-item"><a class="nav-link" href="/relatorios/fluxo-caixa">Relatório de Fluxo de Caixa</a></li>
+            <li class="nav-item"><a class="nav-link" href="/relatorios/patrimonio">Relatório de Patrimônio</a></li>
+            <li class="nav-item"><a class="nav-link" href="/relatorios/livro-ata-atos">Relatório de Livro de Atas e Atos</a></li>
+            <li class="nav-item"><a class="nav-link" href="/relatorios/autorizacao-saida">Relatório de Autorização</a></li>
+            <li class="nav-item"><a class="nav-link" href="/relatorios/unidades-classes-especialidades-desbravadores">Relatório Geral</a></li>
             </ul>
           </div>
         </aside>
