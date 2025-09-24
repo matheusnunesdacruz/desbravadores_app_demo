@@ -247,7 +247,7 @@ def rel_uceds(request: Request, db: Session = Depends(get_db)):
     des = db.query(Desbravador).all()
     return request.app.state.templates.TemplateResponse("rel_uceds.html", {"request": request, "unidades": unidades, "classes": classes, "especialidades": especialidades, "des": des})
 
-@router.get("/relatorios/autorizacao-saida/{desbravador_id}", response_class=HTMLResponse)
+@router.get("/relatorios/autorizacao-saida", response_class=HTMLResponse)
 def rel_autorizacao_saida(desbravador_id: int, request: Request, db: Session = Depends(get_db)):
     d = db.get(Desbravador, desbravador_id)
     return request.app.state.templates.TemplateResponse("rel_autorizacao_saida.html", {"request": request, "d": d})
