@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
+from datetime import datetime
 
 from .database import Base, engine
 from .routers import core
@@ -32,6 +33,8 @@ def create_app() -> FastAPI:
 
     # Templates (HTML)
     templates = Jinja2Templates(directory="app/templates")
+    # Expor helper 'now' para os templates (usa datetime.utcnow)
+    templates.env.globals["now"] = datetime.utcnow
     app.state.templates = templates
 
     # Inclui os routers
