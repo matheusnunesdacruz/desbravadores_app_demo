@@ -3,6 +3,14 @@
 <h2>Fotos e Atividades</h2>
 <p>Galeria das últimas atividades e eventos.</p>
 
+<!-- Formulário de Upload -->
+<form action="/fotos/upload" method="post" enctype="multipart/form-data" class="mb-3">
+  <div class="input-group">
+    <input type="file" name="file" class="form-control" required>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </div>
+</form>
+
 <div class="row g-3">
   {% for img in images %}
   <div class="col-6 col-md-3">
@@ -10,6 +18,12 @@
       <img src="{{ img }}" class="card-img-top" alt="foto">
       <div class="card-body">
         <p class="card-text small">Arquivo: {{ img.split('/')[-1] }}</p>
+
+        <!-- Botão excluir -->
+        <form action="/fotos/delete" method="post">
+          <input type="hidden" name="filename" value="{{ img.split('/')[-1] }}">
+          <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+        </form>
       </div>
     </div>
   </div>
