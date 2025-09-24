@@ -1,4 +1,3 @@
-# app/main.py  (SUBSTITUIR COMPLETAMENTE PELO CONTEÚDO ABAIXO)
 import os
 from pathlib import Path
 from datetime import datetime
