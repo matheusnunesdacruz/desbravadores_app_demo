@@ -19,8 +19,6 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-# Retirei o prefix "/auth" do router para evitar duplicação quando o router
-# é incluído com prefix no main.py. Isso evita rotas como /auth/auth/login.
 router = APIRouter(tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
@@ -60,7 +58,11 @@ def login(
         )
 
     # grava na sessão
-    request.session["user"] = {"id": user.id, "username": user.username, "role": user.role.value}
+    request.session["user"] = {
+        "id": user.id,
+        "username": user.username,
+        "role": user.role if isinstance(user.role, str) else user.role.value,
+    }
     return RedirectResponse(url="/", status_code=303)
 
 
@@ -94,7 +96,11 @@ def register_user(
     db.refresh(new_user)
 
     # login automático após registro
-    request.session["user"] = {"id": new_user.id, "username": new_user.username, "role": new_user.role.value}
+    request.session["user"] = {
+        "id": new_user.id,
+        "username": new_user.username,
+        "role": new_user.role if isinstance(new_user.role, str) else new_user.role.value,
+    }
     return RedirectResponse(url="/", status_code=303)
 
 
