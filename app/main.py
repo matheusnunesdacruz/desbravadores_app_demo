@@ -1,14 +1,27 @@
+# app/main.py  (SUBSTITUIR COMPLETAMENTE PELO CONTEÚDO ABAIXO)
 import os
+from pathlib import Path
+from datetime import datetime
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
-from datetime import datetime
+from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine
-from .routers import core
-from app import auth  # mantém o módulo de autenticação existente
-from app.routers import site  # novo router site
+
+# routers (importa com try/except para evitar erro caso algum router esteja faltando)
+try:
+    from .routers import core, site
+except Exception:
+    core = None
+    site = None
+
+try:
+    from . import auth
+except Exception:
+    auth = None
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -16,7 +29,11 @@ def create_app() -> FastAPI:
         version="1.0.0"
     )
 
-    # CORS (configuração permissiva; ajuste para produção)
+    # Session (use uma variável de ambiente em produção)
+    secret = os.getenv("SESSION_SECRET", "uma_chave_segura_de_sessao")
+    app.add_middleware(SessionMiddleware, secret_key=secret)
+
+    # CORS (ajuste em produção)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["*"],
@@ -25,41 +42,38 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Cria as tabelas (SQLite/Postgres conforme DATABASE_URL)
-    Base.metadata.create_all(bind=engine)
+    # Paths relativos ao pacote
+    pkg_dir = Path(__file__).resolve().parent
 
     # Static files
-    app.mount("/static", StaticFiles(directory="app/static"), name="static")
+    static_dir = pkg_dir / "static"
+    if static_dir.exists():
+        app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
 
-    # Templates (HTML)
-    templates = Jinja2Templates(directory="app/templates")
-    # Expor helper 'now' para os templates (usa datetime.utcnow)
+    # Templates Jinja2
+    templates = Jinja2Templates(directory=str(pkg_dir / "templates"))
     templates.env.globals["now"] = datetime.utcnow
     app.state.templates = templates
 
-    # Inclui os routers
-    app.include_router(core.router)
-    
-    # Login/Register disponíveis em /auth/login e também /login
-    app.include_router(auth.router, prefix="/auth", tags=["auth"])
-    app.include_router(auth.router)  
+    # Cria tabelas se necessário (SQLite / Postgres conforme DATABASE_URL)
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception:
+        # ignore em ambientes onde não queremos criar automaticamente
+        pass
 
-    app.include_router(site.router, tags=["site"])
+    # Incluir routers (com checagem)
+    if core is not None and getattr(core, "router", None) is not None:
+        app.include_router(core.router)
+
+    if auth is not None and getattr(auth, "router", None) is not None:
+        # registra auth somente com prefix (evita rotas duplicadas)
+        app.include_router(auth.router, prefix="/auth", tags=["auth"])
+
+    if site is not None and getattr(site, "router", None) is not None:
+        app.include_router(site.router, tags=["site"])
 
     return app
 
-# Cria a aplicação
+# app exportado para uvicorn: uvicorn app.main:app --reload
 app = create_app()
-
-from starlette.middleware.sessions import SessionMiddleware
-
-def create_app() -> FastAPI:
-    app = FastAPI(
-        title="Clube de Desbravadores Monte das Oliveiras",
-        version="1.0.0"
-    )
-
-    # SessionMiddleware para login baseado em sessão
-    app.add_middleware(SessionMiddleware, secret_key="uma_chave_segura_de_sessao")
-
-    ...
