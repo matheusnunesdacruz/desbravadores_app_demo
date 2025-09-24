@@ -5,6 +5,7 @@ from datetime import date
 from ..database import get_db
 from ..models import Unidade, Classe, Especialidade, Desbravador, Caixa, Mensalidade, Patrimonio, Ata, Ato, TipoLancamento
 from ..utils import parse_date
+from typing import Optional
 
 router = APIRouter()
 
@@ -248,6 +249,15 @@ def rel_uceds(request: Request, db: Session = Depends(get_db)):
     return request.app.state.templates.TemplateResponse("rel_uceds.html", {"request": request, "unidades": unidades, "classes": classes, "especialidades": especialidades, "des": des})
 
 @router.get("/relatorios/autorizacao-saida", response_class=HTMLResponse)
-def rel_autorizacao_saida(desbravador_id: int, request: Request, db: Session = Depends(get_db)):
-    d = db.get(Desbravador, desbravador_id)
-    return request.app.state.templates.TemplateResponse("rel_autorizacao_saida.html", {"request": request, "d": d})
+def rel_autorizacao_saida(
+    request: Request,
+    desbravador_id: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    d = None
+    if desbravador_id is not None:
+        d = db.get(Desbravador, desbravador_id)
+    return request.app.state.templates.TemplateResponse(
+        "rel_autorizacao_saida.html",
+        {"request": request, "d": d}
+    )
