@@ -39,7 +39,11 @@ def create_app() -> FastAPI:
 
     # Inclui os routers
     app.include_router(core.router)
+    
+    # Login/Register disponíveis em /auth/login e também /login
     app.include_router(auth.router, prefix="/auth", tags=["auth"])
+    app.include_router(auth.router)  
+
     app.include_router(site.router, tags=["site"])
 
     return app
