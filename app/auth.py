@@ -19,7 +19,9 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+# Retirei o prefix "/auth" do router para evitar duplicação quando o router
+# é incluído com prefix no main.py. Isso evita rotas como /auth/auth/login.
+router = APIRouter(tags=["auth"])
 templates = Jinja2Templates(directory="app/templates")
 
 
@@ -28,6 +30,7 @@ templates = Jinja2Templates(directory="app/templates")
 # ====================
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
+
 
 def get_password_hash(password):
     return pwd_context.hash(password)
@@ -39,6 +42,7 @@ def get_password_hash(password):
 @router.get("/login", response_class=HTMLResponse)
 def login_form(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
+
 
 @router.post("/login")
 def login(
@@ -61,11 +65,12 @@ def login(
 
 
 # ====================
-# ROTAS DE REGISTRO
+# REGISTRO
 # ====================
 @router.get("/register", response_class=HTMLResponse)
 def register_form(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
+
 
 @router.post("/register")
 def register_user(
@@ -74,11 +79,11 @@ def register_user(
     password: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    user = db.query(User).filter(User.username == username).first()
-    if user:
+    existing = db.query(User).filter(User.username == username).first()
+    if existing:
         return templates.TemplateResponse(
             "register.html",
-            {"request": request, "error": "Usuário já existe"},
+            {"request": request, "error": "Nome de usuário já cadastrado"},
             status_code=400,
         )
 
