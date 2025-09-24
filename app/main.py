@@ -56,6 +56,7 @@ def create_app() -> FastAPI:
 
     # Templates Jinja2
     templates = Jinja2Templates(directory=str(pkg_dir / "templates"))
+    templates = Jinja2Templates(directory="app/templates")
     templates.env.globals["datetime"] = datetime
     app.state.templates = templates
 
