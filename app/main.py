@@ -6,7 +6,6 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
-from starlette.middleware.sessions import SessionMiddleware
 
 from .database import Base, engine
 
@@ -22,6 +21,7 @@ try:
 except Exception:
     auth = None
 
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Clube de Desbravadores Monte das Oliveiras",
@@ -29,8 +29,13 @@ def create_app() -> FastAPI:
     )
 
     # Session (use uma variável de ambiente em produção)
-    secret = os.getenv("SESSION_SECRET", "uma_chave_segura_de_sessao")
-    app.add_middleware(SessionMiddleware, secret_key=secret)
+    try:
+        from starlette.middleware.sessions import SessionMiddleware
+        secret = os.getenv("SESSION_SECRET", "uma_chave_segura_de_sessao")
+        app.add_middleware(SessionMiddleware, secret_key=secret)
+    except ModuleNotFoundError:
+        # Evita quebrar o app se faltar itsdangerous
+        print("⚠️ SessionMiddleware não carregado (instale itsdangerous).")
 
     # CORS (ajuste em produção)
     app.add_middleware(
@@ -73,6 +78,7 @@ def create_app() -> FastAPI:
         app.include_router(site.router, tags=["site"])
 
     return app
+
 
 # app exportado para uvicorn: uvicorn app.main:app --reload
 app = create_app()
