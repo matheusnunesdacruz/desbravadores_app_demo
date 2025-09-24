@@ -50,3 +50,16 @@ def create_app() -> FastAPI:
 
 # Cria a aplicação
 app = create_app()
+
+from starlette.middleware.sessions import SessionMiddleware
+
+def create_app() -> FastAPI:
+    app = FastAPI(
+        title="Clube de Desbravadores Monte das Oliveiras",
+        version="1.0.0"
+    )
+
+    # SessionMiddleware para login baseado em sessão
+    app.add_middleware(SessionMiddleware, secret_key="uma_chave_segura_de_sessao")
+
+    ...
