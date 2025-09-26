@@ -23,8 +23,7 @@ O portal permite administrar membros, eventos, patrimônio, mensalidades e inter
   
 ### Fluxo principal
 1. **Página inicial**: visão geral do clube, informações e brasão.
-2. **Login/Registro**: acesso restrito para membros e líderes.
-3. **Área interna**:
+2. **Área interna**:
    - **Atas**: manter registros oficiais do clube.
    - **Mensalidades**: controle financeiro de contribuições.
    - **Patrimônio**: lista de bens do clube.
