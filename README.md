@@ -1,6 +1,6 @@
 # Portal de Gerenciamento do Clube de Desbravadores
 
-Este é um sistema web desenvolvido para auxiliar clubes de desbravadores na organização e gerenciamento de suas atividades.  
+Este é um sistema web desenvolvido para auxiliar clubes de desbravadores na organização e gerenciamento de suas atividades e validar as especialidades TI. 
 O portal permite administrar membros, eventos, patrimônio, mensalidades e interações com visitantes, de forma prática e centralizada.
 
 ---
